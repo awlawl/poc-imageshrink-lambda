@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mern-starter
+    docker:
+      - image: circleci/node:4.8.2
+     steps:
+      - checkout
+      - run:
+          name: npm install
+          commands: npm install
+      - run:
+          name: run Serverless
+          commands: node_modules/serverless/bin/serverless deploy
