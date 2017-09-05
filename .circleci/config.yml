@@ -1,13 +1,8 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/node:4.8.2
+   build:
+     docker:
+       - image: circleci/nodejs6
      steps:
-      - checkout
-      - run:
-          name: npm install
-          commands: npm install
-      - run:
-          name: run Serverless
-          commands: node_modules/serverless/bin/serverless deploy
+       - checkout
+       - run: echo "hello world"
