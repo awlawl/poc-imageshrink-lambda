@@ -33,7 +33,7 @@ module.exports.handler = (event, context, callback) => {
     execFile(mozjpeg, ['-outfile', afterFile, beforeFile], function(err) {
       if (err) console.dir(err);
       var afterSize = fs.statSync(afterFile).size;
-      console.log('File shrunk ' + (afterSize / beforeSize) * 100.0);
+      console.log('Test File shrunk ' + (afterSize / beforeSize) * 100.0);
     });
 
   });
