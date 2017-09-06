@@ -26,7 +26,11 @@ functions:
   imageShrink:
     handler: handler.handler
     tags: # Function specific tags
-      foo: bar
+      application: allen serverless
+      team: cloud arch
+      customer: cloud arch
+      contact-email: allen.lyons@turner.com
+      environment: test
     # The `events` block defines how to trigger the handler.helloWorld code
 
 resources:
