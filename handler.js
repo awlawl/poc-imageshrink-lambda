@@ -1,7 +1,7 @@
 'use strict';
 var AWS = require('aws-sdk');
 var fs = require('fs');
-var execFile = require('child_process').execFile;
+var execFile = require('child_process').exec;
 
 var mozjpeg = process.cwd() + '/mozcjpeg';
 
@@ -33,7 +33,7 @@ module.exports.handler = (event, context, callback) => {
   var myFile = fs.createWriteStream(beforeFile);
   myFile.on('close', function() {
     var beforeSize = fs.statSync(beforeFile).size;
-    execFile(mozjpeg, ['-outfile', afterFile, beforeFile], function(err) {
+    execFile(mozjpeg + ' -outfile ' + afterFile + ' ' + beforeFile, function(err) {
       if (err) console.dir(err);
       var afterSize = fs.statSync(afterFile).size;
       console.log('Test File shrunk ' + (afterSize / beforeSize) * 100.0);
