@@ -1,7 +1,7 @@
 'use strict';
 var AWS = require('aws-sdk');
 var fs = require('fs');
-var execFile = require('child_process').exec;
+var exec = require('child_process').exec;
 
 var mozjpeg = process.cwd() + '/mozcjpeg';
 
@@ -12,9 +12,9 @@ AWS.config.update({
 });
 
 module.exports.handler = (event, context, callback) => {
-  const response = {
+  var response = {
     body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
+      message: '',
       input: event,
     })
   };
@@ -28,21 +28,43 @@ module.exports.handler = (event, context, callback) => {
   var beforeFile = '/tmp/before.jpg';
   var afterFile = '/tmp/shrunk.jpg';
 
-  fs.writeFileSync('/tmp/whatever','hi');
+  var fileStream = s3.getObject(options, function(err, data) {
+    if (err) {
+      response.message = 'Could not download s3 file.';
+      console.log(err);
+    } else {
+      fs.writeFile(beforeFile, data.Body, function(err) {
+        var beforeSize = fs.statSync(beforeFile).size;
+        console.log('Before size ' + beforeSize);
 
-  var myFile = fs.createWriteStream(beforeFile);
-  myFile.on('close', function() {
-    var beforeSize = fs.statSync(beforeFile).size;
-    execFile(mozjpeg + ' -outfile ' + afterFile + ' ' + beforeFile, function(err) {
-      if (err) console.dir(err);
-      var afterSize = fs.statSync(afterFile).size;
-      console.log('Test File shrunk ' + (afterSize / beforeSize) * 100.0);
-    });
-
+        exec(mozjpeg + ' -outfile ' + afterFile + ' ' + beforeFile, function(err) {
+          if (err) {
+            response.message = 'Could not run mozjpeg.';
+            console.dir(err);
+          } else {
+            var afterSize = fs.statSync(afterFile).size;
+            var message = 'Test File shrunk ' + (afterSize / beforeSize) * 100.0 + '%';
+            console.log(message);
+            response.message = message;
+          }
+          callback(null,response);
+        });
+      });
+    }
   });
 
-  var fileStream = s3.getObject(options).createReadStream();
-  fileStream.pipe(myFile);
 
-  callback(null, response);
+
+/*exec(mozjpeg + ' -outfile ' + afterFile + ' ' + beforeFile, function(err) {
+  if (err) {
+    console.dir(err);
+  } else {
+    var afterSize = fs.statSync(afterFile).size;
+    console.log('Test File shrunk ' + (afterSize / beforeSize) * 100.0);
+  }
+
+});*/
+
+
+
 };
