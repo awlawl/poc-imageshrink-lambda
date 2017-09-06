@@ -5,7 +5,7 @@ var execFile = require('child_process').execFile;
 
 var mozjpeg = process.cwd() + '/mozcjpeg';
 
-process.env[‘PATH’] = process.env[‘PATH’] + ‘:’ + process.env[‘LAMBDA_TASK_ROOT’]
+process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT']
 
 AWS.config.update({
   region: 'us-east-1'
