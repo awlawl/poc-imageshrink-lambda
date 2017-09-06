@@ -2,7 +2,8 @@
 var AWS = require('aws-sdk');
 var fs = require('fs');
 var execFile = require('child_process').execFile;
-var mozjpeg = require('mozjpeg');
+
+var mozjpeg = process.cwd() + '/mozcjpeg';
 
 AWS.config.update({
   region: 'us-east-1'
