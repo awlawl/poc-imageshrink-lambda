@@ -1,7 +1,7 @@
 'use strict';
 var AWS = require('aws-sdk');
 var fs = require('fs');
-var exec = require('child_process').exec;
+var child_process = require('child_process');
 
 var mozjpeg = process.cwd() + '/mozcjpeg';
 
@@ -37,7 +37,7 @@ module.exports.handler = (event, context, callback) => {
         var beforeSize = fs.statSync(beforeFile).size;
         console.log('Before size ' + beforeSize);
 
-        exec(mozjpeg + ' -outfile ' + afterFile + ' ' + beforeFile, function(err) {
+        child_process.execFile(mozjpeg, ['-outfile', afterFile, beforeFile], function(err) {
           if (err) {
             response.message = 'Could not run mozjpeg.';
             console.dir(err);
